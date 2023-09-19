@@ -19,7 +19,20 @@ client.connect()
 );
 
 const bugsRoute=require('./routes/bugsRoute')
+const authRoute=require('./routes/authRoute')
+
 app.use('/bugs',bugsRoute)
+app.use('/auth',authRoute)
+
+
+app.use(express.static('public'));
+app.set('view engine', 'ejs');
+app.use('/login',(req,res)=>{
+    res.render('login')
+})
+app.use('/signup',(req,res)=>{
+    res.render('signup')
+})
 
 app.listen(PORT, () => {
     console.log(`The Server Is Working And listening to Port ${PORT}`);
