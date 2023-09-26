@@ -1,0 +1,185 @@
+<%- include('layout/header') %>
+    <link rel="stylesheet" type="text/css" href="/css/table.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Add these links to your HTML -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+        
+
+    <div id="wrapper">
+        <table id="keywords" cellspacing="0" cellpadding="0">
+            <thead>
+                <tr>
+                    <th><span>Title</span></th>
+                    <th><span>Priority</span></th>
+                    <th><span>Fixed</span></th>
+
+                    <th><span>View</span></th>
+
+                    <th><span>Edit</span></th>
+                    <th><span>Delete</span></th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <% bugs.forEach(function(bug) { %>
+                    <tr>
+                        <td>
+                            <%= bug.title %> </a>
+                        </td>
+                        <td>
+                            <%= bug.priority %>
+                        </td>
+                        <td>
+                            <%= bug.fixed %>
+                        </td>
+                        <td>
+                            <a href="#" data-toggle="modal" data-target="#viewModal"
+                                data-description="<%= bug.description %>" data-responsible="<%= bug.responsible %>">
+                                <i class="fa-solid fa-eye" style="color: #4277e0"></i>
+                            </a>
+                        </td>
+
+                        <td>
+                            <a href="#" data-toggle="modal" data-target="#editModal" data-id="<%= bug.id %>">
+                                <i class="fas fa-edit " style="color: #4277e0"></i>
+                            </a>
+                        </td>
+
+                        <td>
+                            <a href="#" data-toggle="modal" data-target="#deleteModal" data-id="<%= bug.id %>">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </td>
+
+
+                    </tr>
+                    <% }); %>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- view Modal -->
+    <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <!-- Add your modal content here -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Bug Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-2">
+                            <label for="">Description</label>
+                        </div>
+                        <div class="col-10">
+                            <p class="description"></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">
+                            <label for="">Assigned to </label>
+                        </div>
+                        <div class="col-10">
+                            <p class="responsible"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- edit Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen-sm-down" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Bug</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editBugForm">
+                        <div class="form-group">
+                            <label for="editTitle">Title</label>
+                            <input type="text" class="form-control" id="editTitle" name="title">
+                        </div>
+                        <div class="form-group">
+                            <label for="editPriority">Priority</label>
+                            <select class="form-control" id="editPriority" name="priority">
+                                <option value disabled selected>Select an option</option>
+                                <option value="high">High</option>
+                                <option value="mid">Mid</option>
+                                <option value="low">Low</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editFixed">Fixed</label>
+                            <select class="form-control" id="editFixed" name="fixed">
+                                <option value disabled selected>Select an option</option>
+                                <option value="false">False</option>
+                                <option value="true">True</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editDescription">Description</label>
+                            <textarea class="form-control" id="editDescription" name="description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="editResponsible">Assign to</label>
+                            <input type="text" class="form-control" id="editResponsible" name="responsible">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="editBugButton">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen-sm-down" role="document">
+            <div class="modal-content">
+                <!-- Add your modal content here -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Delete Bug</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>This bug is gonna be deleted permanently are you sure that you want to do that ? </p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteButton">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- js code to be seperated in js folder later -->
+
+    <script src="/js/bugshandler.js"></script>
+
+    <%- include('layout/footer') %>

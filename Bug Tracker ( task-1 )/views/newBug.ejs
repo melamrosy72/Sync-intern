@@ -1,0 +1,38 @@
+<%- include('layout/header') %>
+
+
+<link rel="stylesheet" href="/css/style.css">
+    <!-- Add these links to your HTML -->
+
+    <main>
+
+    <div class="grid">
+        <form action="http://localhost:4000/bugs/" method="POST" class="form login"> <!-- Use the "login" class here -->
+            <div class="form__field">
+                <label for="bug__title"><span>Bug Title</span></label>
+                <input id="bug__title" type="text" name="title" class="form__input" placeholder="Bug Title" required>
+            </div>
+            <div class="form__field">
+                <label for="bug__priority"><span>Bug Priority</span></label>
+                <select id="bug__priority" name="priority" class="form__select" required>
+                    <option value="high">High</option>
+                    <option value="mid">Mid</option>
+                    <option value="low">Low</option>
+                </select>
+            </div>
+            <div class="form__field">
+                <label for="bug__description"><span>Bug Description</span></label>
+                <textarea id="bug__description" name="description" class="form__input"
+                    placeholder="Bug Description" required></textarea>
+            </div>
+            <div class="form__field">
+                <input type="submit" value="Report Bug">
+            </div>
+        </form>
+    </div>
+
+    </main>
+
+
+
+

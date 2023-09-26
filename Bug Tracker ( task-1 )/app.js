@@ -1,38 +1,44 @@
 const express = require('express')
-const app = express()
 const cors = require('cors')
 const bodyParser = require('body-parser')
-const client = require('./config/db')
-require('dotenv').config()
-const PORT = process.env.PORT || 8080
 const morgan = require('morgan')
+require('dotenv').config()
+const { connectDatabase } = require('./config/db')
+const bugsRoute = require('./routes/bugsRoute')
+const authRoute = require('./routes/authRoute')
+const usersRoute = require('./routes/usersRoute')
 
+
+const app = express()
+const PORT = process.env.PORT || 8080
+
+// Middleware
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-
 app.use(morgan('dev'))
 app.use(cors())
-
-client.connect()
-    .then(() => console.log('Connected to the database'))
-    .catch(error => console.error('Error connecting to the database:', error)
-);
-
-const bugsRoute=require('./routes/bugsRoute')
-const authRoute=require('./routes/authRoute')
-
-app.use('/bugs',bugsRoute)
-app.use('/auth',authRoute)
-
-
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
-app.use('/login',(req,res)=>{
-    res.render('login')
+
+// Database connection
+connectDatabase();
+
+// Routes
+app.use('/bugs', bugsRoute)
+app.use('/auth', authRoute)
+app.use('/users', usersRoute)
+
+
+//handling general error
+app.all('*', (req, res, next) => {
+    const error = new Error(`Not found , there is no route for this url : ${req.originalUrl}`)
+    error.statusCode = 404;
+    next(error)
 })
-app.use('/signup',(req,res)=>{
-    res.render('signup')
-})
+app.use((error, req, res, next) => {
+    console.error(error);
+    res.status(error.statusCode || 500).json({ error: error.message || 'Internal Server Error' });
+});
 
 app.listen(PORT, () => {
     console.log(`The Server Is Working And listening to Port ${PORT}`);

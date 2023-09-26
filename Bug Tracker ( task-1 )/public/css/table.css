@@ -1,0 +1,73 @@
+/* table.css */
+
+/* Apply a wrapper to center the table */
+#wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #2c3338;
+    padding: 20px;
+}
+
+/* Style the table */
+#keywords {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 600px;
+    background-color: #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+#keywords th,
+#keywords td {
+    padding: 10px;
+    text-align: left;
+}
+
+#keywords th {
+    background-color: #363b41;
+    color: #eee;
+    font-weight: bold;
+}
+
+#keywords tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#keywords tr:hover {
+    background-color: #ddd;
+}
+
+/* Style the table headings */
+#keywords th span {
+    display: block;
+    padding: 5px;
+}
+
+/* Style links in the table */
+#keywords a {
+    color: #ea4c88;
+    text-decoration: none;
+}
+
+#keywords a:hover {
+    text-decoration: underline;
+}
+
+/* Center text in table cells */
+#keywords td {
+    vertical-align: middle;
+}
+
+/* Responsive table */
+@media screen and (max-width: 600px) {
+    #keywords {
+        font-size: 12px;
+    }
+
+    #keywords th span,
+    #keywords td {
+        padding: 5px;
+    }
+}

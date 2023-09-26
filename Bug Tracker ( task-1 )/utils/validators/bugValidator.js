@@ -9,7 +9,6 @@ exports.bugValidator = [
         .isLength({ min: 5 })
         .withMessage('title must be at least 5 characters'),
 
-
     check('description')
         .notEmpty()
         .withMessage('description is required')
@@ -19,7 +18,7 @@ exports.bugValidator = [
     check('priority')
         .notEmpty()
         .withMessage('priority required')
-        .isIn(['top', 'mid', 'normal'])
+        .isIn(['high', 'mid', 'low'])
         .withMessage('specify bug priority (top, mid, normal) '),
 
     validatorMiddleware,

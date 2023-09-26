@@ -1,4 +1,6 @@
-const client = require('../config/db')
+const {client} = require('../config/db')
+const axios = require('axios');
+
 
 // @desc    Get list of all bugs
 // @route   GET /bugs
@@ -28,7 +30,9 @@ exports.newBug = async (req, res) => {
 
         const newBug = await client.query(insertQuery);
 
-        res.status(201).json({ message: 'success', data: newBug.rows[0] });
+        // res.status(201).json({ message: 'success', data: newBug.rows[0] });
+        res.status(201).redirect('/bugs/all')
+
     } catch (error) {
         console.error('Error creating a new bug:', error);
         res.status(500).json({ message: 'Internal Server Error' });
@@ -54,41 +58,20 @@ exports.getBug = async (req, res) => {
     }
 }
 
-// @desc    Mark bug as fixed 
-// @route   PATCh /bugs/:bugId
-// @access  Public
-exports.makeBugFixed = async (req, res) => {
-    const { bugId } = req.params;
-
-    try {
-        // Check if the bug with the given ID exists
-        const query = 'SELECT * FROM bugs WHERE id = $1';
-        const result = await client.query(query, [bugId]);
-
-        if (result.rows.length === 0) return res.status(404).json({ message: 'Bug not found' });
-
-        const updateQuery = 'UPDATE bugs SET fixed = true WHERE id = $1';
-        await client.query(updateQuery, [bugId]);
-        res.status(200).json({ message: 'Bug marked as fixed' });
-
-    } catch (error) {
-        console.error('Error updating bug:', error);
-        res.status(500).json({ message: 'Internal Server Error' });
-    }
-}
 
 // @desc    Edit specific bug by id
 // @route   PATCh /bugs/:bugId
 // @access  Public
 exports.updatebug = async (req, res) => {
     const { bugId } = req.params;
-    const { title, description, priority, responsible_user_id} = req.body;
+    const { title, description, priority, fixed, responsible} = req.body;
     const updatedProperties = {};
 
     if (title !== undefined) updatedProperties.title = title;
     if (description !== undefined) updatedProperties.description = description;
     if (priority !== undefined) updatedProperties.priority = priority;
-    if (responsible_user_id !== undefined) updatedProperties.responsible_user_id = responsible_user_id;
+    if (fixed !== undefined) updatedProperties.fixed = fixed;
+    if (responsible !== undefined) updatedProperties.responsible = responsible
 
 
     try {
@@ -175,3 +158,25 @@ exports.assignUserToBug = async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
+
+
+// for bugs view
+exports.bugsview=async(req,res)=>{
+    try {
+        const response = await axios.get('http://localhost:4000/bugs');
+        const bugs = response.data.data;
+        res.render('bugs', { bugs });
+    } catch (error) {
+        console.error('Error fetching bug data:', error);
+        res.status(500).send('Error fetching bugs data');
+    }
+}
+
+exports.bugFormView=(req,res)=>{
+    try {
+        res.render('newBug');
+    } catch (error) {
+        console.error('Error fetching bug data:', error);
+        res.status(500).send('Error while creating new bug');
+    }
+}
