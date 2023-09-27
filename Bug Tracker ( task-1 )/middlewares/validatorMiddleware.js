@@ -6,7 +6,6 @@ const validatorMiddleware = (req, res, next) => {
     if (!errors.isEmpty()) {
         const messages = errors.errors.map(error => error.msg);
         return res.status(400).json({ errors: messages });
-        // return res.status(400).json({ errors: errors.array() });
     }
     next();
 };

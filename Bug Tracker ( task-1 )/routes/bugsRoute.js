@@ -10,6 +10,6 @@ router.delete('/delete/:bugId',deleteBug)
 
 router.get('/all',bugsview)
 router.get('/bug-form',bugFormView)
-//assignUserToBug >> to - do 
+//assignUserToBug >> assign users to bugs with notification or recieving mails feature may be implemented later
 
 module.exports = router
